@@ -1,83 +1,71 @@
-console.log("%c HI", "color: firebrick");
-
-function fetchDogImageData() {
+// Dog Images
+function getDogImageData() {
   const imgUrl = "https://dog.ceo/api/breeds/image/random/4";
   return fetch(imgUrl).then(response => response.json());
 }
 
-function renderDogImageData() {
-  fetchDogImageData().then(result => renderDogImage(result));
+function renderDogImageSection() {
+  getDogImageData().then(result => renderDogImage(result));
 }
 
 function renderDogImage(json) {
-  const imgContainer = document.querySelector("#dog-image-container");
   const dogData = json["message"];
 
-  for (dogImageUrl of dogData) {
-    const img = buildDogImage(dogImageUrl);
-    imgContainer.appendChild(img);
+  for (const dogImageUrl of dogData) {
+    buildDogImage(dogImageUrl);
   }
 }
 
 function buildDogImage(dogUrl) {
+  const imgContainer = document.querySelector("#dog-image-container");
   const imageTag = document.createElement("img");
   imageTag.src = dogUrl;
-  return imageTag;
+  imgContainer.appendChild(imageTag);
 }
 
-function fetchDogBreedData() {
+// dog breeds
+function getDogBreedData() {
   const breedUrl = "https://dog.ceo/api/breeds/list/all";
   return fetch(breedUrl).then(response => response.json());
 }
 
-function renderDogBreedList(filter = "off") {
+function renderDogBreedListSection(filter) {
   clearBreedsList();
-  if (filter == "off") {
-    fetchDogBreedData().then(result => createBreedList(result));
+  getDogBreedData().then(result => renderBreedList(result, filter));
+}
+
+function renderBreedList(json, filter) {
+  const dogData = json["message"];
+  const breedNames = Object.keys(dogData);
+
+  if (filter == "") {
+    createBreedList(breedNames);
   } else {
-    fetchDogBreedData().then(result => createFilteredBreedList(result, filter));
+    const filteredBreedNames = filterBreedNames(breedNames, filter);
+    createBreedList(filteredBreedNames);
   }
 }
 
-function createBreedList(json) {
-  const dogData = json["message"];
-  const breedNames = Object.keys(dogData);
-  breedListFactory(breedNames);
-}
-
-function createFilteredBreedList(json, letter) {
-  const dogBreeds = json["message"];
-  const breedNames = Object.keys(dogBreeds);
-
+function filterBreedNames(breedNames, letter) {
   const filteredBreedNames = breedNames.filter(function(breed) {
     return breed.charAt(0) == letter;
   });
 
-  breedListFactory(filteredBreedNames);
+  return filteredBreedNames;
 }
 
-function breedListFactory(names) {
-  const dogBreedList = document.querySelector("#dog-breeds");
-
+function createBreedList(names) {
   for (const breedName of names) {
-    const listItem = buildBreedListItem(breedName);
-    dogBreedList.appendChild(listItem);
+    buildBreedListItem(breedName);
   }
 }
 
 function buildBreedListItem(dogName) {
+  const dogBreedList = document.querySelector("#dog-breeds");
   const listItem = document.createElement("li");
   const listItemTextContent = document.createTextNode(dogName);
   listItem.appendChild(listItemTextContent);
-  return listItem;
-}
-
-function filterBreedList(letter) {
-  if (letter == "all") {
-    renderDogBreedList();
-  } else {
-    renderDogBreedList(letter);
-  }
+  dogBreedList.appendChild(listItem);
 }
 
 function clearBreedsList() {
@@ -87,26 +75,26 @@ function clearBreedsList() {
   }
 }
 
-function highlightText(dogBreedItem) {
+function toggleHighlightText(dogBreedItem) {
   dogBreedItem.classList.toggle("highlight");
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  const dogBreedList = document.querySelector("#dog-breeds");
-  const breedSelect = document.querySelector('#breed-dropdown');
+  renderDogBreedListSection("");
+  renderDogImageSection();
 
-  renderDogBreedList();
-  renderDogImageData();
+  const dogBreedList = document.querySelector("#dog-breeds");
+  const breedSelect = document.querySelector("#breed-dropdown");
 
   dogBreedList.addEventListener("click", function(e) {
     const dogBreedListItem = e.target;
     if (dogBreedListItem.tagName == "LI") {
-      highlightText(dogBreedListItem);
+      toggleHighlightText(dogBreedListItem);
     }
   });
 
   breedSelect.addEventListener("change", function(e) {
     const filterLetter = e.target.value;
-    filterBreedList(filterLetter);
+    renderDogBreedListSection(filterLetter);
   });
 });
