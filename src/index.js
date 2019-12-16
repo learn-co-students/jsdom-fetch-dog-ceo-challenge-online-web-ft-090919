@@ -16,25 +16,17 @@ function loadImages() {
     });
 }
 
-
-
-function fetchBreeds() {
-  const breedURL = "https://dog.ceo/api/breeds/list/all";
-
-  fetch(breedURL)
-    .then(results => results.json())
-    .then(res => {
-      res.message.forEach(breed => loadBreedOptions(breed);
+function loadBreedOptions() {
+  const breedUrl = "https://dog.ceo/api/breeds/list/all";
+  fetch(breedUrl)
+    .then(res => res.json())
+    .then(results => {
+      breeds = Object.keys(results.message);
+      updateBreedList(breeds);
+      addBreedSelectListener();
     });
 }
 
-
-function loadBreedOptions(breed){
-    let container = document.querySelector('#dog-breeds');
-    let li = document.createElement('li');
-    li.innerHTML = breed;
-    container.appendChild(li); 
-}
 document.addEventListener("DOMContentLoaded", function() {
   loadImages();
   loadBreedOptions();
