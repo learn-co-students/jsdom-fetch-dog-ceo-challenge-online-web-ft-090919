@@ -8,3 +8,12 @@ function loadImages() {
       results.message.forEach(image => addImage(image));
     });
 }
+
+function addImage(dogPicUrl) {
+  let container = document.querySelector("#dog-image-container");
+  let newImageEl = document.createElement("img");
+  newImageEl.src = dogPicUrl;
+  container.appendChild(newImageEl);
+}
+
+addEventListener("DOMContentLoaded", function() {});
