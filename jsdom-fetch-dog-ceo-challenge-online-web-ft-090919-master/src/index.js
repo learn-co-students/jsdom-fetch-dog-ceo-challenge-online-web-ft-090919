@@ -48,3 +48,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+
+// {message: Array(4), status: "success"}
+// message: Array(4)
+// 0: "https://images.dog.ceo/breeds/poodle-toy/n02113624_189.jpg"
+// 1: "https://images.dog.ceo/breeds/schnauzer-giant/n02097130_925.jpg"
+// 2: "https://images.dog.ceo/breeds/deerhound-scottish/n02092002_4134.jpg"
+// 3: "https://images.dog.ceo/breeds/malinois/n02105162_8950.jpg"
+// length: 4
+// __proto__: Array(0)
+// status: "success"
+// __proto__: Object
